@@ -1,0 +1,112 @@
+import os
+os.environ['MKL_NUM_THREADS'] = '1'
+import torch
+import itertools
+import pickle
+import argparse
+from torch.utils.data import DataLoader
+from eval.rec_eval import leave_k_eval
+import numpy as np
+import models.mf
+import misc.loader
+from models.loss import detNeuralSort, neuPrec
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--model_name", type=str)
+parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+parser.add_argument('--eval_metric', type=str, default='ndcg')
+parser.add_argument('--kk', type=int, default=10)
+parser.add_argument('--device_id', type=int, default=0)
+parser.add_argument('--num_threads', type=int, default=12)
+
+args = parser.parse_args()
+model_name = args.model_name
+torch.cuda.set_device(args.device_id)
+
+with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
+    (tr, val, te) = pickle.load(f)
+
+n_users, n_items = tr.shape
+dims = [128]
+regs = [10.0, 5.0, 3.0]
+lrs = [1e-3 * 5, 1e-3]
+taus = [0.1, 0.5, 1.0, 2.0, 3.0]
+_ks = [1]
+topks = [5, 10, 15, 20, 30]
+
+batch_size = 16384
+n_epochs = 300
+from sklearn.utils import shuffle
+param_search_list = shuffle(list(itertools.product(dims, regs, lrs, taus, _ks, topks)))
+
+best = -1
+for dim, reg, lr, tau, _k, topk in param_search_list:
+    print(lr, tau, topk)
+    dataset = misc.loader.RecDataset(tr, K=topk)
+    loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=args.num_threads)
+    model = models.mf.mfrec(n_users, n_items, dim).cuda()
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    noc = 0
+    update_count= 0
+    last = -1
+    for epoch in range(1, n_epochs + 1):
+        tot_loss = 0
+        model = model.train()
+
+        _ = 0
+        ll = 0
+        for u, i, j in loader:
+            _ += 1
+            u = u.cuda()
+            i = i.cuda()
+            j = j.cuda()
+            #z = z.cuda()
+            y = model.forward(u, i, j)
+            z = torch.zeros_like(y).squeeze(1)
+            z[:, -1] =  1
+            p_hat = detNeuralSort(y, tau=tau, k=_k)
+            a = p_hat[:, 0, 0]
+            b = p_hat[:, 0, 1:]
+            loss = ((a-1)**2).sum() + (b ** 2).sum()
+            ll += loss.sum().detach().cpu().numpy()
+            model.zero_grad()
+            (loss + reg * model.cov(u, torch.cat([i, j.flatten()])).sum()).backward()
+            optimizer.step()
+            model.normalize(u, _target='uid')
+            model.normalize(i, _target='iid')
+            model.normalize(j, _target='iid')
+        
+        if (epoch >= 10) and (epoch % t == 0):
+            model = model.eval()
+            metric = leave_k_eval(model, tr, val, leavek=1, K=args.kk, num_threads=args.num_threads)[args.eval_metric]
+
+            if metric >= best:
+                best = metric
+                print("[%s %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric),
+                      "at dim: %d reg: %0.3f, lr: %0.4f, tau: %0.1f, _k: %d" % (dim, reg, lr, tau, _k))
+                savedir = os.path.join("saved_models", args.dataset_name)
+                if not os.path.exists(savedir):
+                    os.makedirs(savedir)
+                best_paramset = {"model": model,
+                                 "eval_metric": args.eval_metric,
+                                 "epoch": epoch,
+                                 "lr": lr,
+                                 "dim": dim,
+                                 "reg": reg,
+                                 "tau": tau,
+                                 "topk": topk,
+                                 "_k": _k,
+                                 'best': best}
+
+                for test_k in [5, 10, 20, 30]:
+                    best_paramset["test_at_%d" % test_k] = leave_k_eval(model, tr, te, leavek=1, K=test_k, num_threads=args.num_threads)
+                torch.save(best_paramset, os.path.join(savedir, model_name))
+
+            if metric >= last:
+                noc = 0
+                last = metric
+            else:
+                noc += 1
+            if noc >= 5:
+                break

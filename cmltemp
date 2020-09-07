@@ -1,0 +1,23 @@
+[?1049h[?1h=[1;23r[23m[24m[0m[H[J[?25l[23;1H"cml-pt.py" 108L, 3775C[1;1H[38;5;130m  1 [0m[4m[35mimport[24m[0m[4m os                                                                                                                                                           [24m[2;1H[38;5;130m  2 [0mos.environ[[31m'MKL_NUM_THREADS'[0m] = [31m'1'[0m
+[38;5;130m  3 [0m[35mimport[0m torch
+[38;5;130m  4 [0m[35mimport[0m itertools
+[38;5;130m  5 [0m[35mimport[0m pickle
+[38;5;130m  6 [0m[35mfrom[0m torch.utils.data [35mimport[0m DataLoader
+[38;5;130m  7 [0m[35mfrom[0m [36meval[0m.rec_eval [35mimport[0m leave_k_eval, ranking_metrics_at_k
+[38;5;130m  8 [0m[35mimport[0m models.mf
+[38;5;130m  9 [0m[35mimport[0m misc.loader
+[38;5;130m 10 [0m[35mimport[0m argparse
+[38;5;130m 11 
+ 12 [0mmodel_name = [31m"CML"[0m
+[38;5;130m 13 
+ 14 [0mparser = argparse.ArgumentParser()
+[38;5;130m 15 [0mparser.add_argument([31m'--dataset_name'[0m, [36mtype[0m=[36mstr[0m, default=[31m'ml-1m-l-1-100'[0m)
+[38;5;130m 16 [0mparser.add_argument([31m'--eval_metric'[0m, [36mtype[0m=[36mstr[0m, default=[31m'ndcg'[0m)
+[38;5;130m 17 [0mparser.add_argument([31m'--kk'[0m, [36mtype[0m=[36mint[0m, default=[31m10[0m)
+[38;5;130m 18 [0mparser.add_argument([31m'--device_id'[0m, [36mtype[0m=[36mint[0m, default=[31m1[0m)
+[38;5;130m 19 [0mparser.add_argument([31m'--num_threads'[0m, [36mtype[0m=[36mint[0m, default=[31m4[0m)
+[38;5;130m 20 [0margs = parser.parse_args()
+[38;5;130m 21 
+ 22 [0mtorch.cuda.set_device(args.device_id)[23;151H1,1[11CTop[1;5H[34h[?25h[?25l[23;1HType  :qa!  and press <Enter> to abandon all changes and exit Vim[23;151H[K[23;151H1,1[11CTop[1;5H[34h[?25h[?25l[35mimport[0m os[1;14H[K[2;5H[4mos.environ[[24m[4m[31m'MKL_NUM_THREADS'[24m[0m[4m] = [24m[4m[31m'1'[24m[0m[4m                                                                                                                                 [24m[23;151H2[2;5H[34h[?25h[?25l[23;151H[K[23;151H2,1[11CTop[2;5H[34h[?25h[?25los.environ[[31m'MKL_NUM_THREADS'[0m] = [31m'1'[0m[2;40H[K[3;5H[4m[35mimport[24m[0m[4m torch                                                                                                                                                        [24m[23;151H3[3;5H[34h[?25h[?25l[35mimport[0m torch[3;17H[K[4;5H[4m[35mimport[24m[0m[4m itertools                                                                                                                                                    [24m[23;151H4[4;5H[34h[?25h[?25l[23;153H8[4;12H[34h[?25h[?25l[4m         [24m[23;153H6[4;10H[34h[?25h[?25l[4m[35mfrom[24m[0m[4m torch.utils.data[24m[1C[4m[35mimport[24m[0m[1C[4mDataLoader[24m[5;5H[35mfrom[0m [36meval[0m.rec_eval [35mimport[0m leave_k_eval, ranking_metrics_at_k[6;5H[35mimport[0m models.mf[6;21H[K[7;5H[35mimport[0m misc.loader[7;24H[K[8;12Hargparse[8;20H[K[9;5H[K[10;5Hmodel_name = [31m"CML"[0m[12;5Hparser = argparse.ArgumentParser()[13;5Hparser.add_argument([31m'--dataset_name'[0m, [36mtype[0m=[36mstr[0m, default=[31m'ml-1m-l-1-100'[0m)[14;11H.add_argument([31m'--eval_metric'[0m, [36mtype[0m=[36mstr[0m, default=[31m'ndcg'[0m)[15;28H[31mkk'[0m, [36mtype[0m=[36mint[0m, default=[31m10[0m)[15;54H[K[16;28H[31mdevice_id'[0m, [36mtype[0m=[36mint[0m, default=[31m1[0m)[16;60H[K[17;28H[31mnum_threads'[0m, [36mtype[0m=[36mint[0m, default=[31m4[0m)[18;5Hargs = parser.parse_args()[18;31H[K[19;5H[K[20;5Htorch.cuda.set_device(args.device_id)[22;5H[38;5;130mwith[0m [36mopen[0m([31m"data/parsed/%s"[0m % args.dataset_name, [31m'rb'[0m) [38;5;130mas[0m f:[23;153H1[4;5H[34h[?25h[23;1H[?1l>[?1049lVim: Caught deadly signal HUP
+Vim: Finished.
+[23;1H
