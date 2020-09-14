@@ -71,7 +71,7 @@ conda activate drm_test
 ```
 or refer to `virtualenv`.
 
-1. Install *packages*.
+1. Install *packages* and train datasets.
 ```bash
 pip install -r requirements.txt
 cd ~/code/eval/
@@ -89,7 +89,7 @@ For example,
 python ours-pt.py --dataset_name=ml-20m --kk=50 --infer_dot=0
 ```
 
-1. After running `python <some_name>-pt.py`,
+2. After running `python <some_name>-pt.py`,
 ```python
 python <some_name>-fb.py
 ```
@@ -99,7 +99,7 @@ For example,
 python ours-fb.py --dataset_name=ml-20m --pos_sample=1 --infer_dot=0
 ```
 
-2. If you need to check the result of training, you can read it with `torch`.
+3. If you need to check the result of training, you can read it with `torch`.
 
      `python`
 
