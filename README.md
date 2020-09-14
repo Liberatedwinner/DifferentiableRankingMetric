@@ -2,7 +2,7 @@
 
 This is (1) an implementation of model and (2) reproducible experiments for the paper.
 
- We compare DRM<sub>dot</sub> and DRM<sup>L2</sup> with the following baselines.
+ We compare DRM<sub>dot</sub> and DRM<sub>L2</sub> with the following baselines.
 
 ### Baselines
 - SLIM: [Sparse LInear Methods for Top-N Recommender systems](http://glaros.dtc.umn.edu/gkhome/node/774)
