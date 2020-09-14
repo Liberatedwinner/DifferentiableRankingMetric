@@ -44,11 +44,7 @@ for dim in dims:
                 ub, uv = model.get_user_representations()
                 ib, iv = model.get_item_representations()
                 wrapper = misc.util.get_wrapper(uv, iv, ub, ib)
-                if "-l-" in args.dataset_name:
-                    print(args.dataset_name)
-                    metric = leave_k_eval(wrapper, tr, val, leavek=1, K=args.kk, num_threads=args.num_threads)[args.eval_metric]
-                elif "712" in args.dataset_name:
-                    metric = ranking_metrics_at_k(wrapper, tr, val, K=args.kk, num_threads=args.num_threads)[args.eval_metric]
+                metric = ranking_metrics_at_k(wrapper, tr, val, K=args.kk, num_threads=args.num_threads)[args.eval_metric]
                 print("[%s %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric),
                       "at (dim: %d lr: %0.4f reg: %0.4f)" % (dim, lr, reg))
                 if metric > best:

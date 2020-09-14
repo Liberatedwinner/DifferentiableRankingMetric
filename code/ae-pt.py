@@ -95,12 +95,8 @@ for dim, dropout, lamb, lr, _anneal_cap in param_search_list:
         if (epoch % 1 == 0):
             loss_mean = torch.cat(losses).mean()
             model = model.eval()
-            if "-l-" in args.dataset_name:
-                metric = leave_k_eval(model, tr, val, leavek=1, K=args.kk)[args.eval_metric]
-            elif "712" in args.dataset_name:
-                wrapper = models.ae.implicitWrapper(model, naive_sparse2tensor, vae=args.model_name != 'cdae')
-                metric = ranking_metrics_at_k(wrapper, tr, val, K=args.kk)[args.eval_metric]
-
+            wrapper = models.ae.implicitWrapper(model, naive_sparse2tensor, vae=args.model_name != 'cdae')
+            metric = ranking_metrics_at_k(wrapper, tr, val, K=args.kk)[args.eval_metric]
             if metric >= best:
                 best = metric
                 print("[%sc %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric),
@@ -118,15 +114,8 @@ for dim, dropout, lamb, lr, _anneal_cap in param_search_list:
                                  'best': best,
                                  "anneal_cap": _anneal_cap,
                                  "dropout": dropout}
-                """
-                for test_k in [5, 10, 20, 30]:
-                    if "-l-" in args.dataset_name:
-                        best_paramset["test_at_%d" % test_k] = leave_k_eval(model, tr, te, leavek=1, K=args.kk)
-                    if "712" in args.dataset_name:
-                        best_paramset["test_at_%d" % test_k] = ranking_metrics_at_k(wrapper, tr, te, K=args.kk)
-                """
-                torch.save(best_paramset, os.path.join(savedir, args.model_name))
 
+                torch.save(best_paramset, os.path.join(savedir, args.model_name))
             if metric >= last:
                 noc = 0
                 last = metric
