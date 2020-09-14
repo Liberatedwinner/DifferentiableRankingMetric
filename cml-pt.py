@@ -29,20 +29,17 @@ with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
     (tr, val, te) = pickle.load(f)
 
 n_users, n_items = tr.shape
-dims = [128]
+dims = [16, 32, 64, 128]
 regs = [3.0, 5.0]
 if infer_dot is True:
     regs = [0]
-lrs = [0.1, 0.05, 0.03, 0.01]
+lrs = [1e-4, 1e-3, 5 * 1e-3, 0.01, 0.03, 0.05, 0.1]
 batch_size = 8192
 param_search_list = list(itertools.product(dims, regs, lrs))
 n_epochs = 300
 
 best = -1
 
-
-def cml_loss(pos, neg, margin=1.0):
-    return (margin + pos - neg).clamp(min=0)
 
 
 def warp_loss(pos, neg, n_items, margin=1.0):

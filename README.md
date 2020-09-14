@@ -1,6 +1,6 @@
 Differential Neural Metric(DRM) Code Appendix
 ============================
-This is the implementation for our paper.
+This is (1) an implementation of model and (2) reproducible experiments for the paper.
 
 We compare $\text{DRM}_{\text{dot}}$ and $\text{DRM}_{\text{L2}}$ and baseline implementations.
 
@@ -20,7 +20,7 @@ These two baselines are not implemented in python;
 
 
 Environment Settings
-We assume that 
+We assume that
 ----------------
 We use PyTorch with Cuda as the backend for our ML implementations.
  * PyTorch (version: 1.5.0)
