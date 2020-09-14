@@ -1,8 +1,9 @@
 ## Differential Neural Metric(DRM) Code Appendix
 ============================
+
 This is (1) an implementation of model and (2) reproducible experiments for the paper.
 
-We compare $\text{DRM}_{\text{dot}}$ and $\text{DRM}_{\text{L2}}$ with the following baselines.
+ We compare DRM~dot~ and DRM^L2^ with the following baselines.
 
 ### Baselines
 - SLIM: [Sparse LInear Methods for Top-N Recommender systems](http://glaros.dtc.umn.edu/gkhome/node/774)
