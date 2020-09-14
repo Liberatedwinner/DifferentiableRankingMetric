@@ -1,9 +1,9 @@
 About Differential Neural Metric(DRM)
 ============================
 
-This is the implementation for our paper
+This is the implementation for our paper <A Differentiable Ranking Metric Using Relaxed Sorting Operations for Top-K Recommender Systems Implementation>.
 
-Two precision metric models: NP-WARP and NP-CML.
+Two precision metric models: DRM-dot and DRM-L2.
 
 If you use our codes, please cite our paper.
 
