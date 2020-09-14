@@ -1,0 +1,9 @@
+[submodule "code/spotlight"]
+	path = code/spotlight
+	url = https://github.com/maciejkula/spotlight/
+[submodule "code/SLIM"]
+	path = code/SLIM
+	url = https://github.com/KarypisLab/SLIM/
+[submodule "code/implicit"]
+	path = code/implicit
+	url = https://github.com/benfred/implicit
