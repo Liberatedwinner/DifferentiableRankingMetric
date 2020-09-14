@@ -61,7 +61,7 @@ if __name__ == "__main__":
     best = -1
     curr_roll_idx = 0
     workers = []
-    dataset = misc.loader.RecDataset(tr, K=21)
+    dataset = misc.loader.WARPDataset(tr, K=21)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=args.num_threads, pin_memory=True)
     for ep in itertools.count():
         added = False

@@ -43,7 +43,7 @@ if __name__ == "__main__":
     batch_size = 8192
     ev_range = [5, 10, 20, 30, 50]
     for num_run in range(1):
-        dataset = misc.loader.RecDataset(tr, K=21)
+        dataset = misc.loader.WARPDataset(tr, K=21)
         loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, pin_memory=True)
         dim, reg, lr = bp['dim'], bp['reg'], bp['lr']
         print(dim, reg, lr)

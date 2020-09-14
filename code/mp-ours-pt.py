@@ -63,7 +63,7 @@ if __name__ == "__main__":
     workers = []
     _k = args.pos_sample
     negs = 20 * _k
-    dataset = misc.loader.MyDataset(tr, n_pos=_k, n_neg=negs)
+    dataset = misc.loader.DRMDataset(tr, n_pos=_k, n_neg=negs)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=args.num_threads, pin_memory=True)
     for ep in itertools.count():
         added = False

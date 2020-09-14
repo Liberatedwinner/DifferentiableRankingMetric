@@ -14,7 +14,7 @@ from sklearn.utils import shuffle
 import argparse
 from misc.loader import AEDataset
 from torch.utils.data import DataLoader
-from misc.util import naive_sparse2tensor, naive_sparse2tensor
+from misc.util import naive_sparse2tensor
 
 
 parser = argparse.ArgumentParser()
@@ -38,21 +38,21 @@ best_paramset = bp = torch.load(os.path.join(savedir, model_name), map_location=
 del bp['model']
 
 """
-"model": model,
-"eval_metric": args.eval_metric,
-"epoch": epoch,
-"batch_size": batch_size,
-"lr": lr,
-"dim": dim,
-"lamb": lamb,
-'best': best,
-"anneal_cap": _anneal_cap,
-"dropout": dropout}
+    "model": model,
+    "eval_metric": args.eval_metric,
+    "epoch": epoch,
+    "batch_size": batch_size,
+    "lr": lr,
+    "dim": dim,
+    "lamb": lamb,
+    'best': best,
+    "anneal_cap": _anneal_cap,
+    "dropout": dropout
 """
 dim, dropout, lamb, lr = bp['dim'], bp['dropout'], bp['lamb'], bp['lr']
 batch_size, epoch = bp['batch_size'], bp['epoch']
 ae_dataset = AEDataset(tr)
-model = models.ae.MultiDAE(dim + [n_items], n_users=n_users, dropout=dropout).cuda()
+model = models.ae.CDAE(dim + [n_items], n_users=n_users, dropout=dropout).cuda()
 
 ev_range = [5, 10, 20, 30, 50]
 loader = DataLoader(ae_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
@@ -62,7 +62,7 @@ for __ in range(epoch):
     for uid, rowl in (loader):
         row = rowl.float().cuda()
         uid = uid.cuda()
-        scores = model.forward(row)
+        scores = model.forward(row, uid)
         loss = models.loss.MSELoss(row, scores)
         model.zero_grad()
         loss.mean().backward()

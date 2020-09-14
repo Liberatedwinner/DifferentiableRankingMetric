@@ -2,11 +2,7 @@ import numpy as np
 import torch
 from torch import nn
 import itertools
-from .neuralsort import NeuralSort
 from .loss import neuPrecLoss
-
-
-
 
 def norm(x):
     div = torch.clamp((x * x).sum(-1), min=1)
@@ -20,7 +16,6 @@ def loss_mse(u, i, j, reduction=True):
         ret = ret / (j.shape[1] + 1)
     return ret.mean()
 
-
 def loss_ce(u, i, j, reduction=True):
     ui = (u * i).sum(-1)
     uj = (u.unsqueeze(1) * j).sum(-1)
@@ -32,40 +27,12 @@ def loss_ce(u, i, j, reduction=True):
         ret = ret / (j.shape[1] + 1)
     return ret.mean()
 
-
-
 def loss_bpr(u, i, j):
     ui = (u * i).sum(-1)
     uj = (u.unsqueeze(1) * j).sum(-1)
     return -torch.log(torch.sigmoid((ui.unsqueeze(-1) - uj)).mean(-1)).mean()
 
-
-def loss_warp(u, i, j, n_items, margin=1.0):
-    ui = (u * i).sum(-1) # batch_size
-    uj = (u.unsqueeze(1) * j).sum(-1) #batch_size x num_neg_samples
-    uc, _ = uj.max(-1)
-    impostors = torch.log(1.0 + torch.clamp(-ui.unsqueeze(-1) + uj + margin, 0).mean(-1) * n_items)
-    loss_per_pair = torch.clamp(-ui + uc + margin, 0) #batch_size
-    return (impostors * loss_per_pair).sum()
-
-def loss_cml(u, i, j, n_items, margin=1.0):
-    ui = ((u - i) ** 2).sum(-1)
-    uj = ((u.unsqueeze(1) - j) ** 2).sum(-1)
-
-    #DIST Loss:
-    uc, _ = uj.min(-1)
-    loss_per_pair = torch.clamp(ui - uc + margin, 0, 10)
-    rank_approx = ((ui.unsqueeze(-1) - uj + margin) > 0).float().sum(1)
-    w = torch.log(1.0 + rank_approx * n_items)
-    rank_loss = (w * loss_per_pair)
-    return rank_loss.mean()
-
-def loss_reg(u, i, j):
-    return (u ** 2).sum() + (i ** 2).sum() + (j ** 2).sum()
-
-
 class mfrec(nn.Module):
-
     def __init__(self,
                  n_users,
                  n_items,
@@ -110,7 +77,7 @@ class mfrec(nn.Module):
         pos = ((uemb - iemb) ** 2).sum(-1)
         neg = ((uemb.unsqueeze(1) - jemb) ** 2).sum(-1) # (batch size x neg_samples)
         return -torch.cat([pos.unsqueeze(-1), neg], -1)
-        
+
     def dot_fow(self, u, i, j):
         """
             u = batch_size
@@ -123,7 +90,7 @@ class mfrec(nn.Module):
         pos = (uemb * iemb).sum(-1)
         neg = (uemb.unsqueeze(1) * jemb).sum(-1) # (batch size x neg_samples)
         return torch.cat([pos.unsqueeze(-1), neg], -1)
- 
+
     def fow2(self, u, i):
         uemb = self.u_emb(u)
         iemb = self.i_emb(i)

@@ -53,7 +53,7 @@ if __name__ == "__main__":
     batch_size = 8192
     ev_range = [5, 10, 20, 30, 50]
     for num_run in range(1):
-        dataset = misc.loader.MyDataset(tr, n_pos=_k, n_neg=negs)
+        dataset = misc.loader.DRMDataset(tr, n_pos=_k, n_neg=negs)
         loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True)
         dim, reg, lr, tau, alpha = bp['dim'], bp['reg'], bp['lr'], bp['tau'], bp['alpha']
         model = models.mf.mfrec(n_users, n_items, dim, infer_dot=infer_dot).cuda()

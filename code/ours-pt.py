@@ -50,7 +50,7 @@ def warp_loss(pos, neg, n_items, margin=1.0):
 
 
 for dim, reg, lr, tau, alpha, (_k, topk) in param_search_list:
-    dataset = misc.loader.MyDataset(tr, n_pos=_k, n_neg=topk - _k)
+    dataset = misc.loader.DRMDataset(tr, n_pos=_k, n_neg=topk - _k)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=args.num_threads)
     model = models.mf.mfrec(n_users, n_items, dim, infer_dot=infer_dot).cuda()
     optimizer = torch.optim.Adagrad(model.parameters(), lr=lr)

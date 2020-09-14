@@ -9,7 +9,7 @@ import models.ae
 import torch
 from misc.loader import AEDataset
 from torch.utils.data import DataLoader
-from misc.util import naive_sparse2tensor, naive_sparse2tensor
+from misc.util import naive_sparse2tensor
 
 import argparse
 
@@ -43,7 +43,7 @@ best = -1
 for dim, dropout, lamb, lr in param_search_list:
     print("dim", dim, 'dropout %0.2f'% dropout)
     loader = DataLoader(ae_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
-    model = models.ae.MultiDAE(dim + [n_items], n_users=n_users, dropout=dropout).cuda()
+    model = models.ae.CDAE(dim + [n_items], n_users=n_users, dropout=dropout).cuda()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=lamb)
     noc = 0
     update_count= 0
@@ -55,7 +55,7 @@ for dim, dropout, lamb, lr in param_search_list:
         for uid, rowl in (loader):
             row = rowl.float().cuda()
             uid = uid.cuda()
-            scores = model.forward(row)
+            scores = model.forward(row, uid)
             loss = models.loss.MSELoss(row, scores)
             update_count += 1
             model.zero_grad()
