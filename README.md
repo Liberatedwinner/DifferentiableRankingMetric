@@ -1,19 +1,36 @@
-About Differential Neural Metric(DRM)
+Differential Neural Metric(DRM) Code Appendix
 ============================
+This is the implementation for our paper.
 
-This is the implementation for our paper
+We compare $\text{DRM}_{\text{dot}}$ and $\text{DRM}_{\text{L2}}$ and baseline implementations.
 
-Two precision metric models: NP-WARP and NP-CML.
+### Baselines compared
+    - SLIM: Sparse Linear I.. model
+    - CDAE: Collaborative Denoising AutoEncoder;
+    - BPR: Bayesian Personalized Ranking for Matrix Factorization
+    - WMF: Weighted Matrix Factorization
+    - WARP: Weighted Approximated Ranking Pairwise Matrix Factorization
+    - CML: Collaborative Metric Learning
 
-If you use our codes, please cite our paper.
 
-Thank you very much.
+
+These two baselines are not implemented in python;
+[SQLRANK](https://github.com/wuliwei9278/SQL-Rank) written in Julia
+[SRRMF](https://github.com/HERECJ/recsys/tree/master/alg/discrete/SRRMF) written in Matlab
+
 
 Environment Settings
+We assume that 
 ----------------
-We use PyTorch as the backend, with CUDA.
+We use PyTorch with Cuda as the backend for our ML implementations.
  * PyTorch (version: 1.5.0)
  * CUDA (version: 10.1)
+
+For our environments,
+```
+conda install pytorch==1.5.0 torchvision==0.6.0 cudatoolkit=10.1 -c pytorch
+```
+will install appropriate PyTorch with cuda 10.1 version. Please refer https://pytorch.org/get-started/previous-versions/ to see appropriate pytorch version for your environemnt.
 
 We use the packages as listed below(alphabetical order):
  * Cython
@@ -23,21 +40,28 @@ We use the packages as listed below(alphabetical order):
  * numpy
  * scipy
  * sklearn
- * SLIM (https://github.com/KarypisLab/SLIM)
-   * *Note*: You need to install SLIM directly.
- * tensorboardX
  * tqdm
- *
- *
- *
- *
- *
+
+External Libraries:
+* PyTorch
+  *
+* SLIM (https://github.com/KarypisLab/SLIM)
+  * Follow instruction guide in (https://github.com/KarypisLab/SLIM/)
+  * It is required only when evaluating SLIM in our code.
+
+
 
 
 From installation to how-to-use
 ---------------
-1. Install *packages*.
+We assume you are using Anaconda.
 
+conda create --name drm_test python=3.7.3
+conda activate drm_test
+
+
+1. Install *packages*.
+    conda create --name drm_test python=3.7.3
     `pip install -r requirements.txt` or
 
     `pip install <package>`
