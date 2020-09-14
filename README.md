@@ -1,4 +1,4 @@
-## Differential Neural Metric(DRM) Code Appendix
+## Differentiable Ranking Metric(DRM) Code Appendix
 
 This is (1) an implementation of model and (2) reproducible experiments for the paper.
 
@@ -32,12 +32,12 @@ For conda:
 conda install pytorch==1.5.0 torchvision==0.6.0 cudatoolkit=10.1 -c pytorch
 ```
 
-For usual python:
+For usual Python:
 ```
 pip install torch==1.5.0+cu101 torchvision==0.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html
 ```
 
-will install appropriate PyTorch with cuda 10.1 version. Please refer [here](https://pytorch.org/get-started/locally/) and [here](https://pytorch.org/get-started/previous-versions/) to see appropriate pytorch version for your environment.
+will install appropriate PyTorch with cuda 10.1 version. Please refer [here](https://pytorch.org/get-started/locally/) and [here](https://pytorch.org/get-started/previous-versions/) to see appropriate PyTorch version for your environment.
 
 
 We use the packages as listed below(alphabetical order):
@@ -62,7 +62,7 @@ External Libraries:
 
 From installation to how-to-use
 ---------------
-We assume that you have installed python using [Anaconda](https://docs.anaconda.com/anaconda/install/) and your environment is equipped with CUDA. It should be possible to use other python distributions, but we did not tested.
+We assume that you have installed Python using [Anaconda](https://docs.anaconda.com/anaconda/install/) and your environment is equipped with CUDA. It should be possible to use other Python distributions, but we did not tested.
 
 If you are using Conda
 ```
