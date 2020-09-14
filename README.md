@@ -72,8 +72,6 @@ conda activate drm_test
 or refer to `virtualenv`.
 
 1. Install *packages*.
-    conda create --name drm_test python=3.7.3
-
 ```bash
 pip install -r requirements.txt
 cd ~/code/eval/
@@ -81,7 +79,7 @@ python setup.py build_ext --inplace
 cd ~/code/
 ```
 
-We noted the instruction in the codes. You can use `-h` command.
+We noted the instruction in the codes. You can use `-h` command to check instruction.
 ```python
 python <some_name>-pt.py
 ```
@@ -130,13 +128,13 @@ We use these datasets:
  * Melon: https://arena.kakao.com/c/7/data
 
 #### Q & A
-1. `ModuleNotFoundError: No module named 'models'` Error
+1. I have a `ModuleNotFoundError: No module named 'models'` error.
    * Go to `~/code/`, and then run the `.py` file.
      For example, if your result files are in `~/saved/`, then run like this:
 
-2. I have a `ModuleNotFoundError: No module named 'eval.rec_eval'`
+2. I have a `ModuleNotFoundError: No module named 'eval.rec_eval'` error.
    * Go to `code/eval`, and run the command below:
     `python setup.py build_ext --inplace`
 
-3. I have a `ModuleNotFoundError: No module named 'SLIM'`
+3. I have a `ModuleNotFoundError: No module named 'SLIM'` error.
    * You need to install SLIM package directly from https://github.com/KarypisLab/SLIM.
