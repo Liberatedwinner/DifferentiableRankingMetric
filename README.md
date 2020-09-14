@@ -43,8 +43,8 @@ will install appropriate PyTorch with cuda 10.1 version. Please refer [here](htt
 We use the packages as listed below(alphabetical order):
  * Cython
  * fastrand
- * implicit (https://github.com/benfred/implicit)
- * lightfm (https://github.com/lyst/lightfm)
+ * [implicit](https://github.com/benfred/implicit)
+ * [lightfm](https://github.com/lyst/lightfm)
  * numpy
  * scipy
  * sklearn
@@ -53,8 +53,8 @@ We use the packages as listed below(alphabetical order):
 External Libraries:
 * PyTorch
   *
-* SLIM (https://github.com/KarypisLab/SLIM)
-  * Follow instruction guide in (https://github.com/KarypisLab/SLIM/)
+* [SLIM](https://github.com/KarypisLab/SLIM)
+  * Follow instruction guide in [here](https://github.com/KarypisLab/SLIM/).
   * It is required only when evaluating SLIM in our code.
 
 
