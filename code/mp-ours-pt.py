@@ -127,10 +127,7 @@ if __name__ == "__main__":
         for worker in workers:
             model, optimizer, dim, reg, lr, tau, alpha, dd = worker
             model.eval()
-            if "-l-" in args.dataset_name:
-                metric = leave_k_eval(model, tr, val, leavek=1, K=args.kk)[args.eval_metric]
-            elif "712" in args.dataset_name:
-                metric = ranking_metrics_at_k(model, tr, val, K=args.kk)[args.eval_metric]
+            metric = ranking_metrics_at_k(model, tr, val, K=args.kk)[args.eval_metric]
             if metric > best:
                 best = metric
                 print("[epoch:%d]" % dd['epoch'], "[%sc %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric),

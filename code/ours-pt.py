@@ -90,10 +90,7 @@ for dim, reg, lr, tau, alpha, (_k, topk) in param_search_list:
         if (epoch % 5 == 0):
             model = model.eval()
 
-            if "-l-" in args.dataset_name:
-                metric = leave_k_eval(model, tr, val, leavek=1, K=args.kk, num_threads=1)[args.eval_metric]
-            elif "712" in args.dataset_name:
-                metric = ranking_metrics_at_k(model, tr, val, K=args.kk, num_threads=1)[args.eval_metric]
+            metric = ranking_metrics_at_k(model, tr, val, K=args.kk, num_threads=1)[args.eval_metric]
             if metric >= best:
                 best = metric
                 print("[%sc %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric),
@@ -110,10 +107,7 @@ for dim, reg, lr, tau, alpha, (_k, topk) in param_search_list:
                                  'best': best}
 
                 for kk in [5, 10, 20, 30]:
-                    if "-l-" in args.dataset_name:
-                        best_paramset["test_at_%d" % kk] = leave_k_eval(model, tr, val, leavek=1, K=args.kk)
-                    elif "712" in args.dataset_name:
-                        best_paramset["test_at_%d" % kk] = ranking_metrics_at_k(model, tr, val, K=args.kk)
+                    best_paramset["test_at_%d" % kk] = ranking_metrics_at_k(model, tr, val, K=args.kk)
                 torch.save(best_paramset, os.path.join(savedir, model_name))
 
             if metric > last:
