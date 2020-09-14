@@ -21,9 +21,9 @@ args = parser.parse_args()
 with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
     (tr, val, te) = pickle.load(f)
 
-dims = [128, 64]
-regs = [1e-2, 1e-3 * 5, 1e-3, 1e-4]
-lrs = [1e-2*3, 1e-2, 1e-3 * 5, 1e-3]
+dims = [16, 32, 64, 128]
+regs = [1e-4, 1e-3, 1e3 * 5, 0.01]
+lrs = [1e-4, 1e-3, 1e-4 * 5, 1e-3 * 5, 0.01]
 
 best = -1
 for dim in dims:
@@ -33,7 +33,7 @@ for dim in dims:
                             learning_rate=lr,
                             item_alpha=reg,
                             user_alpha=reg,
-                            max_sampled=100,
+                            max_sampled=20,
                             loss=args.model_name)
             iter = 5
             noc = 0
@@ -63,13 +63,6 @@ for dim in dims:
                         "user_factors": wrapper.user_factors,
                         "item_factors": wrapper.item_factors
                     }
-                    """
-                    for test_k in [5, 10, 20, 30]:
-                        if "-l-" in args.dataset_name:
-                            best_paramset["test_at_%d " % test_k] = leave_k_eval(wrapper, tr, te, leavek=1, K=test_k)
-                        elif "712" in args.dataset_name:
-                            best_paramset["test_at_%d " % test_k] = ranking_metrics_at_k(wrapper, tr, te, K=test_k)
-                    """
                     savedir = os.path.join("saved_models", args.dataset_name)
                     if not os.path.exists(savedir):
                         os.makedirs(savedir)

@@ -22,16 +22,10 @@ with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
     (tr, val, te) = pickle.load(f)
 
 tr.data[:] = 1.0
-confs = [5, 10, 15, 20]
-if args.dataset_name in ["melon-712", "pintersest-712", "ml-20m-712"]:
-    confs = [10, 20]
-dims = [64, 128]
-if args.dataset_name in ["melon-712", "pintersest-712", "ml-20m-712"]:
-    dims = [128]
-if args.model_name =='bpr':
-    dims = [128]
-regs = [1e-2, 1e-3 * 5, 1e-3, 1e-4]
-lrs = [1e-2, 3 * 1e-2, 1e-3 * 5, 1e-3]
+dims = [16, 32, 64, 128]
+confs = [1, 3, 5, 10, 15, 20]
+regs = [1e-4, 1e-3, 3 * 1e-3, 0.01, 0.03]
+lrs = [1e-4, 1e-3, 5e-3, 0.01, 0.03, 0.05]
 
 best = -1
 for dim in dims:
@@ -42,7 +36,7 @@ for dim in dims:
         else:
             toiter = lrs
         for w in toiter:
-            iter = 5
+            iter = 3
             losses = []
             last_map =-1
             if args.model_name == 'wmf':
@@ -68,13 +62,9 @@ for dim in dims:
                 model.fit(w * tr.T, show_progress=False)
                 if  args.model_name == 'bpr' and epochs < 10:
                     continue
-                if "-l-" in args.dataset_name:
-                    metric = eval.rec_eval.leave_k_eval(model, tr, val, leavek=1, K=args.kk)[args.eval_metric]
-                else:
-                    metric = eval.rec_eval.ranking_metrics_at_k(model, tr, val, K=args.kk)[args.eval_metric]
-                print("[%s %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric),
+                metric = eval.rec_eval.ranking_metrics_at_k(model, tr, val, K=args.kk)[args.eval_metric]
+                print("[%s %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric), 
                       "at (dim: %d w: %0.4f reg: %0.4f)" % (dim, w, reg))
-
                 if metric > best:
                     best = metric
                     best_paramset ={
