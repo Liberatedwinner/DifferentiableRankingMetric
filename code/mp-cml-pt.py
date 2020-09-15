@@ -23,14 +23,14 @@ def warp_loss(pos, neg, n_items, margin=1.0):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+    parser.add_argument('--model_name', type=str, default="CML")
     parser.add_argument('--eval_metric', type=str, default='recall')
     parser.add_argument('--kk', type=int, default=50)
-    parser.add_argument('--device_id', type=int, default=1)
+    parser.add_argument('--device_id', type=int, default=0)
     parser.add_argument('--num_threads', type=int, default=8)
     parser.add_argument('--infer_dot', type=int, default=0)
     parser.add_argument('--suffix', type=str, default="")
     parser.add_argument('--para', type=int, default=8)
-    parser.add_argument('--model_name', type=str, default="CML")
     args = parser.parse_args()
     model_name = args.model_name
     infer_dot = args.infer_dot == 1
