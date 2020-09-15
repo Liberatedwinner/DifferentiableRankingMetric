@@ -47,4 +47,4 @@ for __ in range(1):
     savedir = os.path.join("best_res", args.dataset_name)
     if not os.path.exists(savedir):
         os.makedirs(savedir)
-    #torch.save(best_paramset, os.path.join(savedir, model_name))
+    torch.save(best_paramset, os.path.join(savedir, model_name))
