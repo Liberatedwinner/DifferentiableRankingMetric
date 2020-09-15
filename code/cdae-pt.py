@@ -18,7 +18,7 @@ parser.add_argument('--dataset_name', type=str, default='ml-1m-new')
 parser.add_argument('--model_name', type=str, default='cdae')
 parser.add_argument('--eval_metric', type=str, default='recall')
 parser.add_argument('--kk', type=int, default=50)
-parser.add_argument('--device_id', type=int, default=1)
+parser.add_argument('--device_id', type=int, default=0)
 parser.add_argument('--num_threads', type=int, default=1)
 
 args = parser.parse_args()
