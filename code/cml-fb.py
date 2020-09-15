@@ -69,13 +69,11 @@ if __name__ == "__main__":
                 model.normalize(j, _target='iid')
         for test_k in ev_range:
             testkey = "test_at_%d" % test_k
-            if 'param' not in best_paramset.keys():
-                best_paramset['param'] = dict()
-            if testkey not in best_paramset['param']:
-                best_paramset['param'][testkey] = []
-            best_paramset['param'][testkey].append(ranking_metrics_at_k(model, tr, te, K=test_k))
+            if testkey not in best_paramset:
+                best_paramset[testkey] = []
+            best_paramset[testkey].append(ranking_metrics_at_k(model, tr, te, K=test_k))
 
         savedir = os.path.join("best_res", args.dataset_name)
         if not os.path.exists(savedir):
             os.makedirs(savedir)
-        torch.save({'model': model,'bp': best_paramset}, os.path.join(savedir, model_name))
+        torch.save({'model': model,'param': best_paramset}, os.path.join(savedir, model_name))
