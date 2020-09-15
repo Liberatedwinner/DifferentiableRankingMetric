@@ -10,7 +10,7 @@ from SLIM import SLIM, SLIMatrix
 import numpy as np
 model_name = 'slim'
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+parser.add_argument('--dataset_name', type=str, default='sketchfab-parsed')
 parser.add_argument('--num_threads', type=int, default=8)
 
 args = parser.parse_args()
@@ -38,8 +38,6 @@ class wrapper():
         s = self.out[userid].tolist()
         return sorted(list(zip(i, s)), key= lambda x: -x[1])
 
-
-temp_fname = "tmp" + model_name + ".tmp"
 best = -1
 savedir = os.path.join("saved_models", args.dataset_name)
 best_paramset = torch.load(os.path.join(savedir, model_name))

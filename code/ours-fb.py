@@ -23,26 +23,20 @@ def warp_loss(pos, neg, n_items, margin=1.0):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+    parser.add_argument('--dataset_name', type=str, default='sketchfab-parsed')
     parser.add_argument('--pos_sample', type=int, default=3)
-    parser.add_argument('--device_id', type=int, default=3)
-    parser.add_argument('--infer_dot', type=int, default=0)
+    parser.add_argument('--device_id', type=int, default=0)
+    parser.add_argument('--model_name', type=str)
     args = parser.parse_args()
-    infer_dot = args.infer_dot == 1
 
     torch.cuda.set_device(args.device_id)
 
     with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
         (tr, val, te) = pickle.load(f)
-    """
-    if infer_dot is False:
-        model_name = "k=%d-%d" % (args.pos_sample, args.pos_sample)
-    else:
-        model_name = "k=%d-dot-%d" % (args.pos_sample, args.pos_sample)
-    """
-    model_name = "ours-256-3"
 
     bp = best_paramset = torch.load(os.path.join("saved_models", args.dataset_name, model_name), map_location='cuda:0')
+
+    infer_dot = bp['infer_dot']
 
     tr = (tr + val).tocsr()
     n_users, n_items = tr.shape
@@ -93,7 +87,6 @@ if __name__ == "__main__":
             if testkey not in best_paramset:
                 best_paramset[testkey] = []
             best_paramset[testkey].append(ranking_metrics_at_k(model, tr, te, K=test_k))
-    best_paramset['model'] = model
     savedir = os.path.join("best_res", args.dataset_name)
     if not os.path.exists(savedir):
         os.makedirs(savedir)

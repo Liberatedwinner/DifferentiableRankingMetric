@@ -12,7 +12,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model_name', type=str, default='CML')
-parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+parser.add_argument('--dataset_name', type=str, default='sketchfab-parsed')
 parser.add_argument('--device_id', type=int, default=1)
 parser.add_argument('--num_threads', type=int, default=4)
 
@@ -36,5 +36,3 @@ for kk in [10, 30, 50]:
     else:
         metric = ranking_metrics_at_k(model, tv, te, K=kk)
     print("@%d" % kk, '\t'.join(["%s: %0.4f" %(k, v) for (k, v) in metric.items()]))
-    
-

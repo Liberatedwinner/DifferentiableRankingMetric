@@ -23,14 +23,10 @@ def warp_loss(pos, neg, n_items, margin=1.0):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+    parser.add_argument('--dataset_name', type=str, default='sketchfab-parsed')
     parser.add_argument('--device_id', type=int, default=0)
-    parser.add_argument('--infer_dot', type=int, default=0)
     args = parser.parse_args()
-    infer_dot = args.infer_dot == 1
     model_name = "CML"
-    if infer_dot is True:
-        model_name = "torch-warp"
     torch.cuda.set_device(args.device_id)
 
     with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
@@ -47,7 +43,7 @@ if __name__ == "__main__":
         loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, pin_memory=True)
         dim, reg, lr = bp['dim'], bp['reg'], bp['lr']
         print(dim, reg, lr)
-        model = models.mf.mfrec(n_users, n_items, dim, infer_dot=infer_dot).cuda()
+        model = models.mf.mfrec(n_users, n_items, dim).cuda()
         optimizer = torch.optim.Adagrad(model.parameters(), lr=lr)
 
         for __ in range(bp['epoch']):
@@ -60,24 +56,17 @@ if __name__ == "__main__":
                 u = u.cuda()
                 i = i.cuda()
                 j = j.cuda()
-                if infer_dot is True:
-                    y = model.dot_fow(u, i, j)
-                else:
-                    y = model.forward(u, i, j)
+                y = model.forward(u, i, j)
                 pos = y[:, 0]
                 neg = y[:, 1:]
                 loss = warp_loss(pos, neg, model.n_items).sum()
                 model.zero_grad()
-                if infer_dot:
-                    reg_term = 0
-                else:
-                    reg_term = reg * model.cov(u, torch.cat([i.flatten(), j.flatten()], -1)).sum()
+                reg_term = reg * model.cov(u, torch.cat([i.flatten(), j.flatten()], -1)).sum()
                 (loss + reg_term).backward()
                 optimizer.step()
                 model.normalize(u, _target='uid')
                 model.normalize(i, _target='iid')
                 model.normalize(j, _target='iid')
-        best_paramset['model'] = model
         for test_k in ev_range:
             testkey = "test_at_%d" % test_k
             if testkey not in best_paramset:

@@ -10,7 +10,7 @@ from SLIM import SLIM, SLIMatrix
 import numpy as np
 model_name = 'slim'
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+parser.add_argument('--dataset_name', type=str, default='sketchfab-parsed')
 parser.add_argument('--eval_metric', type=str, default='recall')
 parser.add_argument('--kk', type=int, default=50)
 parser.add_argument('--num_threads', type=int, default=8)
@@ -49,7 +49,7 @@ for l2r in l2rs:
         params = {'algo': 'cd', 'simtype': 'dotp', 'nthreads': args.num_threads, 'l1r': l1r, 'l2r': l2r}
         model = SLIM()
         model.train(params, trainmat)
-        
+
 
         #generate top-10 recommendations
         prediction_res = model.predict(trainmat, nrcmds=args.kk, returnscores=True)
@@ -61,8 +61,8 @@ for l2r in l2rs:
             __best_paramset = {
                 "l1-reg": l1r,
                 "l2-reg": l2r,
-                "metric": args.eval_metric,
-                "best": metric,
+                "validation_measure": args.eval_metric,
+                "validation_best": metric,
             }
 
             prediction_res = model.predict(trainmat, nrcmds=100, returnscores=True)
@@ -73,4 +73,3 @@ for l2r in l2rs:
             if not os.path.exists(savedir):
                 os.makedirs(savedir)
             torch.save(__best_paramset, os.path.join(savedir, model_name))
-

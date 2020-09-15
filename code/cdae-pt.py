@@ -34,18 +34,18 @@ dims = [[64], [128]]
 dims = [x for x in dims if len(x) == 1]
 lrs = [1e-4, 1e-3, 5 * 1e-3, 0.01, 0.03, 0.05, 0.1]
 dropouts = [0.2, 0.5, 0.8]
-lambs = [0, 1e-4, 1e-3, 3 * 1e-3]
+regs = [0, 1e-5, 1e-4, 1e-3, 3 * 1e-3]
 
 n_epochs = 300
-param_search_list = list(itertools.product(dims, dropouts, lambs, lrs))
+param_search_list = list(itertools.product(dims, dropouts, regs, lrs))
 ae_dataset = AEDataset(tr)
 
 best = -1
-for dim, dropout, lamb, lr in param_search_list:
+for dim, dropout, reg, lr in param_search_list:
     print("dim", dim, 'dropout %0.2f'% dropout)
     loader = DataLoader(ae_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
     model = models.ae.CDAE(dim + [n_items], n_users=n_users, dropout=dropout).cuda()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=lamb)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=reg)
     noc = 0
     update_count= 0
     last = -1
@@ -72,18 +72,16 @@ for dim, dropout, lamb, lr in param_search_list:
             if metric >= best:
                 best = metric
                 print("[%sc %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric),
-                      "at dim:", dim, "drop: %0.2f lamb: %0.4f, lr: %0.4f" % (dropout, lamb, lr))
+                      "at dim:", dim, "drop: %0.2f reg: %0.4f, lr: %0.4f" % (dropout, reg, lr))
                 savedir = os.path.join("saved_models", args.dataset_name)
                 if not os.path.exists(savedir):
                     os.makedirs(savedir)
-                best_paramset = {"model": model,
-                                 "eval_metric": args.eval_metric,
+                best_paramset = {"validation_measure": args.eval_metric,
                                  "epoch": epoch,
-                                 "batch_size": batch_size,
                                  "lr": lr,
                                  "dim": dim,
-                                 "lamb": lamb,
-                                 'best': best,
+                                 "reg": reg,
+                                 'validation_best': best,
                                  "dropout": dropout}
                 torch.save(best_paramset, os.path.join(savedir, args.model_name))
 
