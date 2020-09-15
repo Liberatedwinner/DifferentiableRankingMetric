@@ -79,7 +79,7 @@ python setup.py build_ext --inplace
 cd ~/code/
 ```
 
-2. Install *submodules*.
+2. Install *submodules* (implicit, SLIM, spotlight).
 ```bash
 git submodule update --init --recursive
 ```
