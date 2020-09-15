@@ -27,7 +27,7 @@ We use PyTorch with Cuda as the backend for our ML implementations.
  * PyTorch (version: 1.5.0)
  * CUDA (version: 10.1)
 
-For conda:
+For Conda:
 ```
 conda install pytorch==1.5.0 torchvision==0.6.0 cudatoolkit=10.1 -c pytorch
 ```
@@ -64,7 +64,7 @@ From installation to how-to-use
 ---------------
 We assume that you have installed Python using [Anaconda](https://docs.anaconda.com/anaconda/install/) and your environment is equipped with CUDA. It should be possible to use other Python distributions, but we did not tested.
 
-If you are using Conda
+If you are using Conda,
 ```
 conda create --name drm_test python=3.7.3
 conda activate drm_test
@@ -121,11 +121,9 @@ We use these datasets:
 #### Q & A
 1. I have a `ModuleNotFoundError: No module named 'models'` error.
    * Go to `~/code/`, and then run the `.py` file.
-     For example, if your result files are in `~/saved/`, then run like this:
 
 2. I have a `ModuleNotFoundError: No module named 'eval.rec_eval'` error.
-   * Go to `code/eval`, and run the command below:
-    `python setup.py build_ext --inplace`
+   * Go to `code/eval`, and run the command `python setup.py build_ext --inplace`.
 
 3. I have a `ModuleNotFoundError: No module named 'SLIM'` error.
    * You need to install SLIM package directly from https://github.com/KarypisLab/SLIM.
