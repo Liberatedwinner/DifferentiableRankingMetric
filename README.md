@@ -107,7 +107,7 @@ For example,
 python ours-fb.py --dataset_name=ml-20m --pos_sample=1 --infer_dot=0
 ```
 
-6. If you need to check the result of training, you can read it with `Data statistics.ipynb`.
+6. If you need to check the result of training, you can read it with *Data statistics.ipynb*.
 
 
 #### Datasets
