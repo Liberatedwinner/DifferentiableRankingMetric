@@ -27,7 +27,7 @@ We use PyTorch with Cuda as the backend for our ML implementations.
  * PyTorch (version: 1.5.0)
  * CUDA (version: 10.1)
 
-For conda:
+For Conda:
 ```
 conda install pytorch==1.5.0 torchvision==0.6.0 cudatoolkit=10.1 -c pytorch
 ```
@@ -64,7 +64,7 @@ From installation to how-to-use
 ---------------
 We assume that you have installed Python using [Anaconda](https://docs.anaconda.com/anaconda/install/) and your environment is equipped with CUDA. It should be possible to use other Python distributions, but we did not tested.
 
-If you are using Conda
+If you are using Conda,
 ```
 conda create --name drm_test python=3.7.3
 conda activate drm_test
@@ -79,6 +79,14 @@ python setup.py build_ext --inplace
 cd ~/code/
 ```
 
+2. Install *submodules* (implicit, SLIM, spotlight).
+```bash
+git submodule update --init --recursive
+```
+
+3. Preprocess the raw dataset. Use *Data preprocessing.ipynb*
+
+4. Run `python <some_name>-pt.py`. 
 We noted the instruction in the codes. You can use `-h` command to check instruction.
 ```python
 python <some_name>-pt.py
@@ -89,7 +97,7 @@ For example,
 python ours-pt.py --dataset_name=ml-20m --kk=50 --infer_dot=0
 ```
 
-2. After running `python <some_name>-pt.py`,
+5. After running `python <some_name>-pt.py`, run `python <some_name>-fb.py`.
 ```python
 python <some_name>-fb.py
 ```
@@ -99,25 +107,8 @@ For example,
 python ours-fb.py --dataset_name=ml-20m --pos_sample=1 --infer_dot=0
 ```
 
-3. If you need to check the result of training, you can read it with `torch`.
+6. If you need to check the result of training, you can read it with *Data statistics.ipynb*.
 
-     `python`
-
-    `>>> import torch`
-
-    `>>> torch.load(open('<location>', 'rb'))`
-
-    For example,
-
-        >>> torch.load(open('saved_results/sketchfab/k=1', 'rb'))
-
-    then the result is like this:
-```json
-        {'model': mfrec(
-        (u_emb): Embedding(15563, 128)
-        (i_emb): Embedding(28806, 128)
-        ), 'eval_metric': 'recall', 'epoch': 150, 'lr': 0.05, 'dim': 128, 'alpha': 1.0, 'tau': 0.1, 'reg': 0.5, 'best': 0.27563380826315786}
-```
 
 #### Datasets
 We use these datasets:
@@ -130,11 +121,9 @@ We use these datasets:
 #### Q & A
 1. I have a `ModuleNotFoundError: No module named 'models'` error.
    * Go to `~/code/`, and then run the `.py` file.
-     For example, if your result files are in `~/saved/`, then run like this:
 
 2. I have a `ModuleNotFoundError: No module named 'eval.rec_eval'` error.
-   * Go to `code/eval`, and run the command below:
-    `python setup.py build_ext --inplace`
+   * Go to `code/eval`, and run the command `python setup.py build_ext --inplace`.
 
 3. I have a `ModuleNotFoundError: No module named 'SLIM'` error.
    * You need to install SLIM package directly from https://github.com/KarypisLab/SLIM.
