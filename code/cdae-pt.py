@@ -71,7 +71,7 @@ for dim, dropout, lamb, lr in param_search_list:
             if metric >= best:
                 best = metric
                 print("[%sc %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric),
-                      "at dim:", dim, "drop: %0.2f lamb: %0.4f, lr: %0.4f" % (dropout, lamb, lr)
+                      "at dim:", dim, "drop: %0.2f lamb: %0.4f, lr: %0.4f" % (dropout, lamb, lr))
                 savedir = os.path.join("saved_models", args.dataset_name)
                 if not os.path.exists(savedir):
                     os.makedirs(savedir)
