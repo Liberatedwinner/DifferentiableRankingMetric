@@ -86,7 +86,7 @@ git submodule update --init --recursive
 
 3. Preprocess the raw dataset. Use *Data preprocessing.ipynb*
 
-4. Run `python <some_name>-pt.py`. 
+4. Run `python <some_name>-pt.py`.
 We noted the instruction in the codes. You can use `-h` command to check instruction.
 ```python
 python <some_name>-pt.py
@@ -127,3 +127,9 @@ We use these datasets:
 
 3. I have a `ModuleNotFoundError: No module named 'SLIM'` error.
    * You need to install SLIM package directly from https://github.com/KarypisLab/SLIM.
+
+--------
+- Early Stopping used
+- validate every 5 epochs (3 for WMF)
+- for slim, we did not conduct early stopping.
+- We used batch size 500 for CDAE. We did not see performance difference among different batch sizes.

@@ -23,7 +23,7 @@ def warp_loss(pos, neg, n_items, margin=1.0):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_name', type=str)
-    parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+    parser.add_argument('--dataset_name', type=str, default='sketchfab-parsed')
     parser.add_argument('--eval_metric', type=str, default='recall')
     parser.add_argument('--kk', type=int, default=50)
     parser.add_argument('--pos_sample', type=int, default=3)
@@ -41,12 +41,17 @@ if __name__ == "__main__":
         (tr, val, te) = pickle.load(f)
     n_users, n_items = tr.shape
     dims = [16]
+    #dims = [16, 32, 64, 128]
     regs = [0.5, 1.0]
+    #regs = [0.1, 0.5, 1.0, 3.0, 5.0, 10.0]
     if infer_dot is True:
         regs = [0]
     lrs = [5 * 1e-3, 0.01]
+    #lrs = [1e-4, 1e-3, 5e-3, 0.01, 0.03, 0.05, 0.1]
     taus = [0.5, 1.0]
+    #taus = [0.1, 0.3, 0.5, 1.0, 3.0, 10.0]
     alphas = [0.1, 0.5]
+    #alphas = [0.1, 0.5, 1.0]
     batch_size = 8192
 
     rollable_params = [
@@ -107,23 +112,7 @@ if __name__ == "__main__":
                     model.normalize(i, _target='iid')
         for model, optimizer, dim, reg, lr, tau, alpha, dd in workers:
             dd['epoch'] += 5
-        """
-        __ = PPool.map(mapper, [(worker, tr, val, args.kk, args.dataset_name, args.eval_metric, args.model_name, best) for worker in workers])
-        print("!?!")
-        bests = [x[1] for x in __]
-        metrics = [x[0] for x in __]
-        best = np.max(bests)
-        for metric, (model, optimizer, dim, reg, lr, tau, alpha, dd) in zip(metrics, workers):
-            if metric > dd['last']:
-                dd['noc'] = 0
-                dd['last'] = metric
-            else:
-                dd['noc'] += 1
-            if dd['noc'] >= 3:
-                dd['del'] = True
-            if dd['epoch'] >= n_epochs:
-                dd['del'] = True
-        """
+
         for worker in workers:
             model, optimizer, dim, reg, lr, tau, alpha, dd = worker
             model.eval()
@@ -135,15 +124,15 @@ if __name__ == "__main__":
                 savedir = os.path.join("saved_models", args.dataset_name)
                 if not os.path.exists(savedir):
                     os.makedirs(savedir)
-                best_paramset = {"model": model,
-                                 "eval_metric": args.eval_metric,
+                best_paramset = {"validation_measure": args.eval_metric,
                                  "epoch": dd['epoch'],
                                  "lr": lr,
                                  "dim": dim,
                                  "alpha": alpha,
                                  "tau": tau,
                                  "reg": reg,
-                                 'best': best}
+                                 "infer_dot": infer_dot,
+                                 'validation_best': best}
                 torch.save(best_paramset, os.path.join(savedir, model_name))
 
             if metric > dd['last']:

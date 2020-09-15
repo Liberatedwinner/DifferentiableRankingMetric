@@ -10,7 +10,7 @@ from eval.rec_eval import leave_k_eval, ranking_metrics_at_k
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+parser.add_argument('--dataset_name', type=str, default='sketchfab-parsed')
 parser.add_argument('--model_name', type=str, default='warp')
 parser.add_argument('--eval_metric', type=str, default='recall')
 parser.add_argument('--kk', type=int, default=50)

@@ -10,7 +10,7 @@ from eval.rec_eval import leave_k_eval, ranking_metrics_at_k
 os.environ['MKL_NUM_THREADS'] = '1'
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+parser.add_argument('--dataset_name', type=str, default='sketchfab-parsed')
 parser.add_argument('--model_name', type=str, default='wmf')
 parser.add_argument('--num_threads', type=int, default=8)
 
@@ -28,15 +28,15 @@ bp = best_paramset = torch.load(os.path.join("saved_models", args.dataset_name, 
 print(bp)
 
 """
-    "metric": args.eval_metric,
+    "validation_measure" : args.eval_metric,
     "dim": dim,
     "reg": reg,
-    "iter": (i + 1) * iter,
-    "best": metric,
-    "user_factors": model.user_factors,
-    "item_factors": model.item_factors
+    "epoch": (i + 1) * iter,
+    "best": metric
+    "conf": -> exists when WMF used
+    "lr": -> exists when BPR used
 """
-dim, reg, iter = bp['dim'], bp['reg'], bp['iter']
+dim, reg, iter = bp['dim'], bp['reg'], bp['epoch']
 
 if args.model_name == 'wmf':
     conf = bp['conf']

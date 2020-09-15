@@ -9,7 +9,7 @@ import torch
 os.environ['MKL_NUM_THREADS'] = '1'
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+parser.add_argument('--dataset_name', type=str, default='sketchfab-parsed')
 parser.add_argument('--model_name', type=str, default='wmf')
 parser.add_argument('--eval_metric', type=str, default='recall')
 parser.add_argument('--kk', type=int, default=50)
@@ -23,9 +23,13 @@ with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
 
 tr.data[:] = 1.0
 dims = [16]
+#dims = [16, 32, 64, 128]
 confs = [5, 10]
+#confs = [1, 3, 5, 10, 15, 20]
 regs = [3 * 1e-3, 0.01]
+#regs = [1e-4, 1e-3, 3e-3, 0.01, 0.03]
 lrs = [5e-3, 0.01, 0.03]
+#lrs = [1e-4, 1e-3, 5e-3, 0.01, 0.03, 0.05]
 
 best = -1
 for dim in dims:
@@ -63,18 +67,16 @@ for dim in dims:
                 if  args.model_name == 'bpr' and epochs < 10:
                     continue
                 metric = eval.rec_eval.ranking_metrics_at_k(model, tr, val, K=args.kk)[args.eval_metric]
-                print("[%s %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric), 
+                print("[%s %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric),
                       "at (dim: %d w: %0.4f reg: %0.4f)" % (dim, w, reg))
                 if metric > best:
                     best = metric
-                    best_paramset ={
-                        "metric": args.eval_metric,
+                    best_paramset = {
+                        "validation_measure": args.eval_metric,
                         "dim": dim,
                         "reg": reg,
-                        "iter": (i + 1) * iter,
-                        "best": metric,
-                        "user_factors": model.user_factors,
-                        "item_factors": model.item_factors
+                        "epoch": (i + 1) * iter,
+                        "validation_best": metric
                     }
                     if args.model_name == 'wmf':
                         best_paramset['conf'] = w

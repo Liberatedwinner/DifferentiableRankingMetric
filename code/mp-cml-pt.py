@@ -22,30 +22,28 @@ def warp_loss(pos, neg, n_items, margin=1.0):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
+    parser.add_argument('--dataset_name', type=str, default='sketchfab-parsed')
     parser.add_argument('--model_name', type=str, default="CML")
     parser.add_argument('--eval_metric', type=str, default='recall')
     parser.add_argument('--kk', type=int, default=50)
     parser.add_argument('--device_id', type=int, default=0)
     parser.add_argument('--num_threads', type=int, default=8)
-    parser.add_argument('--infer_dot', type=int, default=0)
     parser.add_argument('--suffix', type=str, default="")
     parser.add_argument('--para', type=int, default=8)
     args = parser.parse_args()
     model_name = args.model_name
-    infer_dot = args.infer_dot == 1
 
     torch.cuda.set_device(args.device_id)
 
     with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
         (tr, val, te) = pickle.load(f)
     n_users, n_items = tr.shape
-
     dims = [16]
     regs = [0.5, 1.0]
-    if infer_dot is True:
-        regs = [0]
+    #dims = [16, 32, 64, 128]
+    #regs = [0.1, 0.5, 1.0, 3.0, 5.0, 10.0]
     lrs = [5 * 1e-3, 0.01]
+    #lrs = [1e-4, 1e-3, 5e-3, 0.01, 0.03, 0.05, 0.1]
     batch_size = 8192
 
     rollable_params = [
@@ -67,7 +65,7 @@ if __name__ == "__main__":
         added = False
         while curr_roll_idx < len(rollable_params_list) and len(workers) < poolsize:
             dim, reg, lr = rollable_params_list[curr_roll_idx]
-            model = models.mf.mfrec(n_users, n_items, dim, infer_dot=infer_dot).cuda()
+            model = models.mf.mfrec(n_users, n_items, dim).cuda()
             optimizer = torch.optim.Adagrad(model.parameters(), lr=lr)
             workers.append([model, optimizer, dim, reg, lr, {"epoch": 0, "ll": 0, "last": -1, 'del': False}])
             curr_roll_idx = curr_roll_idx + 1
@@ -91,10 +89,7 @@ if __name__ == "__main__":
                     loss = warp_loss(pos, neg, model.n_items).sum()
                     model.zero_grad()
 
-                    if infer_dot:
-                        reg_term = 0
-                    else:
-                        reg_term = reg * model.cov(u, torch.cat([i, j.flatten()], -1)).sum()
+                    reg_term = reg * model.cov(u, torch.cat([i, j.flatten()], -1)).sum()
                     (loss + reg_term).backward()
                     optimizer.step()
                     model.normalize(u, _target='uid')
@@ -116,12 +111,12 @@ if __name__ == "__main__":
                 if not os.path.exists(savedir):
                     os.makedirs(savedir)
                 best_paramset = {
-                                 "eval_metric": args.eval_metric,
+                                 "validation_measure": args.eval_metric,
                                  "epoch": dd['epoch'],
                                  "lr": lr,
                                  "dim": dim,
                                  "reg": reg,
-                                 'best': best}
+                                 'validation_best': best}
 
                 torch.save(best_paramset, os.path.join(savedir, args.model_name))
             if metric > dd['last']:
