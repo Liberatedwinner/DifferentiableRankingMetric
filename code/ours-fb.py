@@ -30,7 +30,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     torch.cuda.set_device(args.device_id)
-
+    model_name = args.model_name
     with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
         (tr, val, te) = pickle.load(f)
 
