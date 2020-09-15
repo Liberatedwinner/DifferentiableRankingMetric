@@ -94,7 +94,7 @@ python <some_name>-pt.py
 
 For example,
 ```python
-python ours-pt.py --dataset_name=ml-20m --kk=50 --infer_dot=0
+python mp-ours-pt.py --dataset_name=ml-20m --kk=50 --infer_dot=0
 ```
 
 5. After running `python <some_name>-pt.py`, run `python <some_name>-fb.py`.
@@ -107,7 +107,7 @@ For example,
 python ours-fb.py --dataset_name=ml-20m --pos_sample=1 --infer_dot=0
 ```
 
-6. If you need to check the result of training, you can read it with *Data statistics.ipynb*.
+6. If you need to check the result of training, you can read it with *Evaluation result.ipynb*.
 
 
 #### Datasets
