@@ -131,5 +131,6 @@ We use these datasets:
 --------
 - Early Stopping used
 - validate every 5 epochs (3 for WMF)
-- for slim, we did not conduct early stopping.
+- for SLIM, we did not conduct early stopping.
 - We used batch size 500 for CDAE. We did not see performance difference among different batch sizes.
+- for SLIM, we use coordinate descent. 
