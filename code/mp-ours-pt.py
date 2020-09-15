@@ -40,18 +40,14 @@ if __name__ == "__main__":
     with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
         (tr, val, te) = pickle.load(f)
     n_users, n_items = tr.shape
-    dims = [16]
-    #dims = [16, 32, 64, 128]
-    regs = [0.5, 1.0]
-    #regs = [0.1, 0.5, 1.0, 3.0, 5.0, 10.0]
+
+    dims = [16, 32, 64, 128]
+    regs = [0.1, 0.5, 1.0, 3.0, 5.0, 10.0]
     if infer_dot is True:
         regs = [0]
-    lrs = [5 * 1e-3, 0.01]
-    #lrs = [1e-4, 1e-3, 5e-3, 0.01, 0.03, 0.05, 0.1]
-    taus = [0.5, 1.0]
-    #taus = [0.1, 0.3, 0.5, 1.0, 3.0, 10.0]
-    alphas = [0.1, 0.5]
-    #alphas = [0.1, 0.5, 1.0]
+    lrs = [1e-4, 1e-3, 5e-3, 0.01, 0.03, 0.05, 0.1]
+    taus = [0.1, 0.3, 0.5, 1.0, 3.0, 10.0]
+    alphas = [0.1, 0.5, 1.0]
     batch_size = 8192
 
     rollable_params = [
