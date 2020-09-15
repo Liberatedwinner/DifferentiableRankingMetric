@@ -71,7 +71,7 @@ if __name__ == "__main__":
                 if infer_dot:
                     reg_term = 0
                 else:
-                    reg_term = reg * model.cov(u, torch.cat([i, j.flatten(), -1]))
+                    reg_term = reg * model.cov(u, torch.cat([i.flatten(), j.flatten()], -1)).sum()
                 (loss + reg_term).backward()
                 optimizer.step()
                 model.normalize(u, _target='uid')
