@@ -59,9 +59,11 @@ while cnt < 5:
             res = model.predict(trainmat, nrcmds=test_k, returnscores=True)
             w = wrapper(res)
             testkey = "test_at_%d" % test_k
-            if testkey not in best_paramset:
-                best_paramset[testkey] = []
-            best_paramset[testkey].append(ranking_metrics_at_k(w, tv, te, K=test_k))
+            if 'param' not in best_paramset:
+                best_paramset['param'] = dict()
+            if testkey not in best_paramset['param']:
+                best_paramset['param'][testkey] = []
+            best_paramset['param'][testkey].append(ranking_metrics_at_k(w, tv, te, K=test_k))
         except:
             fail += 1
     if fail == 0:
