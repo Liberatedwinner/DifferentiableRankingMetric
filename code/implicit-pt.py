@@ -22,10 +22,10 @@ with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
     (tr, val, te) = pickle.load(f)
 
 tr.data[:] = 1.0
-dims = [16, 32, 64, 128]
-confs = [1, 3, 5, 10, 15, 20]
-regs = [1e-4, 1e-3, 3 * 1e-3, 0.01, 0.03]
-lrs = [1e-4, 1e-3, 5e-3, 0.01, 0.03, 0.05]
+dims = [16]
+confs = [5, 10]
+regs = [3 * 1e-3, 0.01]
+lrs = [5e-3, 0.01, 0.03]
 
 best = -1
 for dim in dims:

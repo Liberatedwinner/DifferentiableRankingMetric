@@ -25,7 +25,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset_name', type=str, default='ml-1m-l-1-100')
     parser.add_argument('--eval_metric', type=str, default='recall')
     parser.add_argument('--kk', type=int, default=50)
-    parser.add_argument('--device_id', type=int, default=1)
+    parser.add_argument('--device_id', type=int, default=0)
     parser.add_argument('--num_threads', type=int, default=8)
     parser.add_argument('--infer_dot', type=int, default=0)
     parser.add_argument('--suffix', type=str, default="")
@@ -41,11 +41,11 @@ if __name__ == "__main__":
         (tr, val, te) = pickle.load(f)
     n_users, n_items = tr.shape
 
-    dims = [16, 32, 64, 128]
-    regs = [0.1, 0.5, 1.0, 3.0, 5.0, 10.0]
+    dims = [16]
+    regs = [0.5, 1.0]
     if infer_dot is True:
         regs = [0]
-    lrs = [1e-4, 1e-3, 5 * 1e-3, 0.01, 0.03, 0.05, 0.1]
+    lrs = [5 * 1e-3, 0.01]
     batch_size = 8192
 
     rollable_params = [
