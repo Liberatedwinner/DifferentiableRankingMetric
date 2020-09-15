@@ -50,13 +50,15 @@ for dim in dims:
                     best = metric
                     best_paramset ={
                         "metric": args.eval_metric,
-                        "dim": dim,
-                        "reg": reg,
-                        "lr": lr,
-                        "iter": (i + 1) * iter,
-                        "best": metric,
-                        "user_factors": wrapper.user_factors,
-                        "item_factors": wrapper.item_factors
+                        "param": {
+                            "dim": dim,
+                            "reg": reg,
+                            "lr": lr,
+                            "iter": (i + 1) * iter,
+                            "best": metric,
+                            "user_factors": wrapper.user_factors,
+                            "item_factors": wrapper.item_factors
+                            }
                     }
                     savedir = os.path.join("saved_models", args.dataset_name)
                     if not os.path.exists(savedir):
