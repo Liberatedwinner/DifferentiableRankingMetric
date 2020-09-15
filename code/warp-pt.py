@@ -24,7 +24,6 @@ with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
 dims = [16]
 regs = [1e-4, 1e-3]
 lrs = [1e-3, 1e-4 * 5]
-
 best = -1
 for dim in dims:
     for reg in regs:

@@ -30,6 +30,7 @@ with open("data/parsed/%s" % args.dataset_name, 'rb') as f:
 
 n_users, n_items = tr.shape
 batch_size = 500
+dims = [[64], [128]]
 dims = [x for x in dims if len(x) == 1]
 lrs = [1e-4, 1e-3, 5 * 1e-3, 0.01, 0.03, 0.05, 0.1]
 dropouts = [0.2, 0.5, 0.8]
@@ -71,7 +72,7 @@ for dim, dropout, lamb, lr in param_search_list:
             if metric >= best:
                 best = metric
                 print("[%sc %s@%d: %0.4f]" % (args.dataset_name, args.eval_metric, args.kk, metric),
-                      "at dim:", dim, "drop: %0.2f lamb: %0.4f, lr: %0.4f" % (dropout, lamb, lr)
+                      "at dim:", dim, "drop: %0.2f lamb: %0.4f, lr: %0.4f" % (dropout, lamb, lr))
                 savedir = os.path.join("saved_models", args.dataset_name)
                 if not os.path.exists(savedir):
                     os.makedirs(savedir)
